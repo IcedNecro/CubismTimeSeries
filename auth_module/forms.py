@@ -13,7 +13,6 @@ class RegistrationForm(forms.Form):
     confirmPassword = forms.CharField(widget=forms.PasswordInput, required=True)
 
     def is_valid(self):
-        import ipdb; ipdb.set_trace()
         password = self.data.get('password')
         confirmPassword = self.data.get('confirmPassword')
         login = self.data.get('login')
