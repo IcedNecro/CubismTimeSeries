@@ -6,3 +6,4 @@ psycopg2
 static
 wsgiref
 ipdb
+whitenoise
