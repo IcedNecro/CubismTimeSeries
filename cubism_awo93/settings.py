@@ -110,7 +110,6 @@ TEMPLATES = [
 import dj_database_url
 # if DEBUG is False:
 DATABASES['default'] = dj_database_url.config()
-DATABASES['default']['ENGINE'] = 'django_postgrespool'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
