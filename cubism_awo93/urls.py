@@ -7,4 +7,5 @@ urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^auth/', include('auth_module.urls', namespace='auth')),
+    url(r'', 'auth_module.views.handle_all')
 )

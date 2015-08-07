@@ -37,12 +37,8 @@ def process_login(request):
 
         if user is not None:
             login(request, user)
-            template = loader.get_template('templates/home.html')
-            context = RequestContext(request, {"username":user.username})
-
-            return HttpResponse(template.render(context))
+            return HttpResponseRedirect(reverse('auth:home'))
         else:
-
             response = HttpResponseRedirect(reverse('auth:login'))
             messages.add_message(request, messages.INFO, 'Current user is not registred yet')
 
@@ -59,15 +55,15 @@ def process_login(request):
 def process_registration(request):
     form = forms.RegistrationForm(request.POST)
 
+    login = request.POST.get('login')
     if form.is_valid():
-        login = request.POST.get('login')
         passwd = request.POST.get('password')
 
         user = _models.User.objects.create_user(username=login, password=passwd)
 
         return HttpResponseRedirect(reverse('auth:login'))
     else:
-        messages.add_message(request, messages.INFO, 'Fill required fields')
+        messages.add_message(request, messages.INFO, 'User with login "{}" already exists.'.format(login))
 
         response = HttpResponseRedirect(reverse('auth:register'))
         return response
@@ -82,8 +78,14 @@ def process_logout(request):
 '''
 
 @login_required
-def render_home_form(request):
+def render_home(request):
     template = loader.get_template('templates/home.html')
     context = RequestContext(request, {"username": request.user.username})
 
     return HttpResponse(template.render(context))
+
+
+''' Handles root path ('/') redirect
+'''
+def handle_all(request):
+    return HttpResponseRedirect(reverse('auth:home'))
