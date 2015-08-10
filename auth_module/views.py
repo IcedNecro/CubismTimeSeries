@@ -1,3 +1,5 @@
+import util
+
 from forms import *
 from django.template import RequestContext, loader
 from django.http import HttpResponse, HttpResponseRedirect
@@ -76,14 +78,24 @@ def process_logout(request):
 
 ''' Renders home page
 '''
-
 @login_required
 def render_home(request):
+    if not request.session.get('credentials', False):
+        uri = util.refresh_credentials()
+        return HttpResponseRedirect(uri)
+
     template = loader.get_template('templates/home.html')
     context = RequestContext(request, {"username": request.user.username})
 
     return HttpResponse(template.render(context))
 
+
+''' Handle OAuth2 authorization
+'''
+def oauth_autorization(request):
+    http_auth = util.authorize(request.GET['code'])
+    request.session['credentials'] = http_auth.to_json()
+    return HttpResponseRedirect(reverse('auth:home'))
 
 ''' Handles root path ('/') redirect
 '''
