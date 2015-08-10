@@ -10,5 +10,7 @@ urlpatterns = [
     url(r'^logout/$', views.process_logout, name='logout'),
     url(r'^process_reg/$', views.process_registration, name='process_reg'),
     url(r'^process_login/$', views.process_login, name='process_login'),
-    url(r'^home/$', views.render_home, name='home')
+    url(r'^home/$', views.render_home, name='home'),
+    url(r'^recieve_auth/$', views.oauth_autorization, name='credits')
+
 ]
