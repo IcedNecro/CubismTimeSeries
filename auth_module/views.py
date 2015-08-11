@@ -95,6 +95,7 @@ def render_home(request):
 def oauth_autorization(request):
     http_auth = util.authorize(request.GET['code'])
     request.session['credentials'] = http_auth.to_json()
+
     return HttpResponseRedirect(reverse('auth:home'))
 
 ''' Handles root path ('/') redirect

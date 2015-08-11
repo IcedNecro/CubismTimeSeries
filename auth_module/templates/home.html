@@ -1,11 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="rest_app">
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+
+    {% load staticfiles %}
+    <script src="{% static 'js/controller.js' %}"></script>
 </head>
-<body>
+<body ng-controller="rest-controller">
     <h1>Hello {{ username }}</h1>
     <a href="{% url 'auth:logout' %}">Log out</a>
+    <div class="filter-content">
+        {% verbatim %}
+        <label for="interconnect-select">Select Interconnect</label>
+        <select ng-change="getUnitIds(inter)" ng-model='inter' id="interconnect-select">
+            <option ng-repeat="interconnect in interconnectList"> {{ interconnect.interconnection }}</option>
+        </select>
+        <label for="unit-ids-select">Select Interconnect</label>
+        <select ng-change='getMeasurement(inter, unitId)' ng-model='unitId' id="unit-ids-select">
+            <option ng-repeat="id in unitIds"> {{ id.unitId }}</option>
+        </select>
+        {% endverbatim %}
+
+    </div>
+    <div>
+        {% verbatim %}
+        <table>
+            <tr>
+                <td>UTCtimestamp</td>
+                <td>Frequency</td>
+            </tr>
+            <tr ng-repeat="measure in measurements">
+                <td>{{ measure.timestamp }}</td>
+                <td>{{ measure.frequency }}</td>
+            </tr>
+        </table>
+        {% endverbatim %}
+    </div>
 </body>
 </html>

@@ -2,7 +2,7 @@ __author__ = 'roman'
 
 from django.conf.urls import include, url
 
-from . import views
+import views
 
 urlpatterns = [
     url(r'^login/$', views.render_login_form, name="login"),
