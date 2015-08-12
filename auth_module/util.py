@@ -1,15 +1,6 @@
 import httplib2
-import pprint
-import sys
 
-from apiclient.discovery import build
-from apiclient.errors import HttpError
-
-from oauth2client.client import AccessTokenRefreshError
-from oauth2client.client import OAuth2WebServerFlow
 from oauth2client.client import flow_from_clientsecrets
-from oauth2client.file import Storage
-from oauth2client import tools
 
 REDIRECT_URI = 'http://localhost:8000/auth/recieve_auth/'
 PROJECT_NUMBER = 'lateral-replica-87221'

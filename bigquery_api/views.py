@@ -42,24 +42,25 @@ def get_units(request, bigquery):
     return Response(result)
 
 ''' Returns frequency for specific Unit in specific interconnection
-    Endpoint /bigquery/units/?interconnection=<interconnection name>&unit_id=<unit id>
+    Endpoint /bigquery/units/?interconnection=<interconnection name>&unit_id=<unit id>&limit=<limit>&start=<start sec>
 '''
 @api_view(['GET',])
 @pre_authorize
 def get_initial_frequency(request, bigquery):
     interconnection = request.query_params['interconnection']
     uid = 'Unit #'+request.query_params['unit_id']
-
+    limit = request.query_params['limit']
+    start = request.query_params['start']
     query_request = bigquery.jobs()
     query_data = {'query':'SELECT UTCtimestamp, Frequency FROM [flx_test.flx_test5] \
-                            WHERE Interconnect="{}" AND UnitID="{}" LIMIT 100;'.format(interconnection, uid)}
+                            WHERE Interconnect="{}" AND UnitID="{}" AND UTCtimestamp > {} ORDER BY UTCtimestamp DESC LIMIT {};'.format(interconnection, uid, start,limit)}
 
     query_response = query_request.query(projectId=util.PROJECT_NUMBER, body=query_data).execute()
     rows = query_response['rows']
     result = []
     for row in rows:
         r = row['f']
-        result.append({'timestamp': r[0]['v'], 'frequency': r[1]['v']})
+        result.append(r[1]['v'])
     return Response(result)
 
 ''' Returns available interconnections

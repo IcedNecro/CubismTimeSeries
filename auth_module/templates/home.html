@@ -3,12 +3,18 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
+    <script src="http://d3js.org/d3.v2.js?2.9.1"></script>
+    <script src="http://square.github.com/cubism/cubism.v1.js?1.0.0"></script>
+
     <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 
     {% load staticfiles %}
+    <script src="{% static 'js/graph.js' %}"></script>
+
     <script src="{% static 'js/controller.js' %}"></script>
+
 </head>
 <body ng-controller="rest-controller">
     <h1>Hello {{ username }}</h1>
@@ -26,8 +32,10 @@
         {% endverbatim %}
 
     </div>
-    <div>
-        {% verbatim %}
+    <div class="graph">
+
+
+        <!--{% verbatim %}
         <table>
             <tr>
                 <td>UTCtimestamp</td>
@@ -38,7 +46,8 @@
                 <td>{{ measure.frequency }}</td>
             </tr>
         </table>
-        {% endverbatim %}
+        {% endverbatim %}-->
     </div>
 </body>
+
 </html>
