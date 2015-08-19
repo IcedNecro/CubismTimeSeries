@@ -14,10 +14,11 @@ Chart.prototype.bigquery_metric= function(inter, uid, limit) {
     var value = 0,
           values = [],
           i = 0,
-          last;
+          last,
+          self = this;
+
 
     return context.metric(function(start, stop, step, callback) {
-        alert(start +" "+ stop+" "+step)
         var values = [];
         stop = +stop;
         start = +start
@@ -25,9 +26,20 @@ Chart.prototype.bigquery_metric= function(inter, uid, limit) {
         var limit = (stop - start)/STEP;
         d3.xhr('/bigquery/freq/?interconnection='+inter+'&unit_id='+uid+'&limit='+limit+'&start='+start, function(response){
             values=JSON.parse(response.response);
+            if(self.firstRequest) {
+                self.min = Math.min.apply(null, values);
+                self.max = Math.max.apply(null, values);
+                self.horizon.extent([0,self.max-self.min+2])
+                d3.select('.top-limit-value').text('max '+self.max);
+                d3.select('.bottom-limit-value').text('min '+self.min);
+            }
             for(var i=0; i<values.length; i++)
-                values[i] = parseFloat(values[i])
+                values[i] = parseFloat(values[i])-self.min
             callback(null, values);
+            if(self.firstRequest) {
+                self.firstRequest = false;
+                self.context.stop()
+            }
         })
 
     });
@@ -35,34 +47,35 @@ Chart.prototype.bigquery_metric= function(inter, uid, limit) {
 }
 
 Chart.prototype.addRow = function(inter, uid) {
+    var self = this;
     var data = [this.bigquery_metric(inter, uid),]
-    var horizon = context.horizon()
+    this.horizon = context.horizon()
         //.mode('mirror')
-        .height(300)
-        .extent([55,65])
+        .height(200)
         .colors(["#bdd7e7","#bae4b3"])
-    d3.select(".graph").selectAll(".horizon")
+    this.chart = d3.select(".graph").selectAll(".horizon")
         .data(data)
         .enter()
         .insert("div", ".bottom")
             .attr("class", "horizon")
-            .call(horizon)
-    this.context.on("focus", function(i) {
-        d3.selectAll(".value").style("right", i == null ? null : context.size() - i + "px");
-    });
+            .call(this.horizon)
+
+    
+    d3.selectAll('.horizon').append('div').append('p').attr('class', 'top-limit-value').text('axis')
+    d3.selectAll('.horizon').append('div').append('p').attr('class', 'bottom-limit-value').text('axis')
 }
 
 Chart.prototype.init = function() {
     self = this;
-    d3.select(".graph").selectAll(".axis")
+    var axis = d3.select(".graph").selectAll(".axis")
         .data(["top", "bottom"])
         .enter().append("div")
             .attr("class", function(d) { return d + " axis"; })
-            .each(function(d) { d3.select(this).call(self.context.axis().ticks(12).orient(d)); });
+            .each(function(d) { d3.select(this).call(self.context.axis().ticks(20).orient(d)); });
 
     d3.select(".graph").append("div")
         .attr("class", "rule")
         .call(this.context.rule());
 
-
+    this.firstRequest = true;
 }

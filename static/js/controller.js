@@ -4,7 +4,6 @@ var rest_controller = angular.module('rest_app', []).config(['$httpProvider', fu
 }]);
 
 rest_controller.controller('rest-controller', function ($scope, $http) {
-    $scope.graph = new Chart(STEP, NUM_OF_STEPS)
     $scope.getInterconnections = function() {
         $http.get('/bigquery/interconnections/').success(function(data) {
             $scope.interconnectList = data;
@@ -18,10 +17,15 @@ rest_controller.controller('rest-controller', function ($scope, $http) {
     }
 
     $scope.getMeasurement = function(inter, unitId) {
+        if($scope.graph) {
+            delete $scope.graph;
+            d3.selectAll('.graph *').remove();
+        }
+        $scope.graph = new Chart(STEP, NUM_OF_STEPS)
+        $scope.graph.init();
         $scope.graph.addRow(inter.slice(1, inter.length), unitId.slice(7,unitId.length));
     }
 
-    $scope.graph.init();
 
     $scope.getInterconnections()
 })

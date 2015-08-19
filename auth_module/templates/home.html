@@ -15,6 +15,23 @@
 
     <script src="{% static 'js/controller.js' %}"></script>
 
+    <style>
+        .horizon {
+            position: relative;
+        }
+
+        .top-limit-value {
+            position: absolute;
+            top: 0px;
+            margin: 0px;
+        }
+
+        .bottom-limit-value {
+            position: absolute;
+            bottom: 0px;
+            margin: 0px;
+        }
+    </style>
 </head>
 <body ng-controller="rest-controller">
     <h1>Hello {{ username }}</h1>
@@ -33,20 +50,6 @@
 
     </div>
     <div class="graph">
-
-
-        <!--{% verbatim %}
-        <table>
-            <tr>
-                <td>UTCtimestamp</td>
-                <td>Frequency</td>
-            </tr>
-            <tr ng-repeat="measure in measurements">
-                <td>{{ measure.timestamp }}</td>
-                <td>{{ measure.frequency }}</td>
-            </tr>
-        </table>
-        {% endverbatim %}-->
     </div>
 </body>
 
