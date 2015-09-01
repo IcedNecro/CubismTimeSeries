@@ -10,46 +10,52 @@
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     {% load staticfiles %}
     <script src="{% static 'js/graph.js' %}"></script>
 
     <script src="{% static 'js/controller.js' %}"></script>
-
-    <style>
-        .horizon {
-            position: relative;
-        }
-
-        .top-limit-value {
-            position: absolute;
-            top: 0px;
-            margin: 0px;
-        }
-
-        .bottom-limit-value {
-            position: absolute;
-            bottom: 0px;
-            margin: 0px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 </head>
 <body ng-controller="rest-controller">
     <h1>Hello {{ username }}</h1>
     <a href="{% url 'auth:logout' %}">Log out</a>
-    <div class="filter-content">
-        {% verbatim %}
-        <label for="interconnect-select">Select Interconnect</label>
-        <select ng-change="getUnitIds(inter)" ng-model='inter' id="interconnect-select">
-            <option ng-repeat="interconnect in interconnectList"> {{ interconnect.interconnection }}</option>
-        </select>
-        <label for="unit-ids-select">Select Interconnect</label>
-        <select ng-change='getMeasurement(inter, unitId)' ng-model='unitId' id="unit-ids-select">
-            <option ng-repeat="id in unitIds"> {{ id.unitId }}</option>
-        </select>
-        {% endverbatim %}
+    <div class="col-md-offset-1 col-md-10">
+        <div class="filter-content form-group col-md-12 form-group-sm">
+            {% verbatim %}
+            <div id='{{ "line-"+i }}' ng-repeat='i in range()'>
 
-    </div>
-    <div class="graph">
+                <div class="filter-line">
+                    <div class="col-md-6">
+                        <label for="interconnect-select" class="control-label col-md-4">Select Interconnect:</label>
+                        <div class="col-md-8">
+                            <select ng-change="getUnitIds(i)" ng-model='filters[i].selectedIntercon' id="interconnect-select" class="form-control col-md-8">
+                                <option ng-repeat="interconnect in interconnectList"> {{ interconnect.interconnection }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="unit-ids-select" class='col-md-4 control-label'>Select Unit:</label>
+                        <div class="col-md-8">
+                            <select  ng-model='filters[i].selectedUnitId' id="unit-ids-select" class='form-control'>
+                                <option ng-repeat="id in filters[i].unitIds"> {{ id.unitId }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button ng-if='is_refresh(i)' type="button" class="btn btn-warning col-md-6" ng-click='getMeasurement(i)'>Refresh</button>
+                    <button ng-if='!is_refresh(i)' type="button" class="btn btn-success col-md-6" ng-click='getMeasurement(i)'>Add</button>
+                    <button type="button" class="btn btn-danger col-md-6" ng-click='remove(i)'>Delete</button>
+                </div>
+                <div class="co-md-10 graph-content">
+                    <div class="graph col-md-10 col-md-offset-1" class='graph'  id='{{ "graph-" + i }}'>
+                </div>
+            </div>
+            {% endverbatim %}   
+        </div>
     </div>
 </body>
 

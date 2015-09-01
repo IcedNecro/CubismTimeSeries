@@ -1,4 +1,27 @@
+/* BOOSTRAP OVERRIDES */
+
+.control-label {
+	text-align: right;
+}
+
+/* BOOSTRAP OVERRIDES */
+
 .graph {
-    height: 200px;
-    width: 1000px;
+    height: 300px;
+}
+
+.horizon {
+    position: relative;
+}
+
+.top-limit-value {
+    position: absolute;
+    top: 0px;
+    margin: 0px;
+}
+
+.bottom-limit-value {
+    position: absolute;
+    bottom: 0px;
+    margin: 0px;
 }

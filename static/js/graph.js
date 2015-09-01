@@ -4,10 +4,13 @@ var context = cubism.context()
 
 var Chart = function(step, num_of_steps) {
 
+    var width = parseInt($('#graph-1').css('width'))
     context = cubism.context()
         .step(STEP)
-        .size(960);
+        .size(width);
     this.context = context;
+    this.data = [];
+    this.dataMap = {};
 }
 
 Chart.prototype.bigquery_metric= function(inter, uid, limit) {
@@ -46,14 +49,18 @@ Chart.prototype.bigquery_metric= function(inter, uid, limit) {
 
 }
 
-Chart.prototype.addRow = function(inter, uid) {
+Chart.prototype.addRow = function(i,inter, uid) {
     var self = this;
-    var data = [this.bigquery_metric(inter, uid),]
+    var metric = this.bigquery_metric(inter, uid);
+    this.data.push(metric);
+
+    var data = [metric]
     this.horizon = context.horizon()
         //.mode('mirror')
         .height(200)
         .colors(["#bdd7e7","#bae4b3"])
-    this.chart = d3.select(".graph").selectAll(".horizon")
+
+    this.chart = d3.select("#graph-"+i).selectAll(".horizon")
         .data(data)
         .enter()
         .insert("div", ".bottom")
@@ -65,15 +72,15 @@ Chart.prototype.addRow = function(inter, uid) {
     d3.selectAll('.horizon').append('div').append('p').attr('class', 'bottom-limit-value').text('axis')
 }
 
-Chart.prototype.init = function() {
+Chart.prototype.init = function(i) {
     self = this;
-    var axis = d3.select(".graph").selectAll(".axis")
+    var axis = d3.select("#graph-"+i).selectAll(".axis")
         .data(["top", "bottom"])
         .enter().append("div")
             .attr("class", function(d) { return d + " axis"; })
             .each(function(d) { d3.select(this).call(self.context.axis().ticks(20).orient(d)); });
 
-    d3.select(".graph").append("div")
+    d3.select("#graph-"+i).append("div")
         .attr("class", "rule")
         .call(this.context.rule());
 
